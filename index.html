@@ -1,0 +1,1955 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"
+    />
+    <!-- Favicon / Page Title Logo Icon -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='16' fill='%230d6efd'/><path d='M14 8H18V14H24V18H18V24H14V18H8V14H14V8Z' fill='white'/></svg>"
+    />
+    <title>Pharmacy Management System</title>
+
+    <!-- Google Font: Exo 2 & Hind Siliguri -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300..900;1,300..900&family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-color: #eef2f7;
+        --card-bg: #ffffff;
+        --text-color: #333333;
+        --primary-color: #0d6efd;
+        --border-color: #e0e0e0;
+        --table-header: #0d6efd;
+        --input-bg: #ffffff;
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        --radius: 12px;
+        --spacing: 15px;
+      }
+
+      [data-theme="dark"] {
+        --bg-color: #121212;
+        --card-bg: #1e1e1e;
+        --text-color: #e0e0e0;
+        --primary-color: #3d8bfd;
+        --border-color: #333333;
+        --table-header: #1f2937;
+        --input-bg: #2d2d2d;
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Exo 2", sans-serif;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html,
+      body {
+        height: 100%;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        background: var(--bg-color);
+        color: var(--text-color);
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: auto;
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        padding: var(--spacing);
+        box-shadow: var(--shadow);
+        flex: 1 0 auto;
+        width: 100%;
+      }
+
+      .main-title {
+        text-align: center;
+        font-size: clamp(20px, 5vw, 32px);
+        color: var(--primary-color);
+        margin-bottom: var(--spacing);
+        font-weight: 700;
+        word-break: break-word;
+      }
+
+      .header-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing);
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .header-bar .left-buttons,
+      .header-bar .right-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .header-bar button,
+      .admin-profile-badge {
+        min-height: 40px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: clamp(12px, 2.5vw, 14px);
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        box-sizing: border-box;
+        transition:
+          transform 0.15s,
+          opacity 0.2s;
+        touch-action: manipulation;
+        white-space: nowrap;
+      }
+
+      .header-bar button:active {
+        transform: scale(0.95);
+      }
+      .header-bar button:hover {
+        opacity: 0.9;
+      }
+
+      .admin-profile-badge {
+        background: rgba(25, 135, 84, 0.1);
+        color: #198754;
+        border: 1px solid rgba(25, 135, 84, 0.3);
+        gap: 6px;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        background: var(--primary-color);
+        color: #fff;
+      }
+      .btn-success {
+        background: #198754;
+        color: #fff;
+      }
+      .btn-secondary {
+        background: #6c757d;
+        color: #fff;
+      }
+      .btn-danger {
+        background: #dc3545;
+        color: #fff;
+      }
+      .btn-warning {
+        background: #ffc107;
+        color: #000;
+      }
+
+      .btn-dynamic-add {
+        background: linear-gradient(135deg, #0d6efd, #0056b3);
+        color: #fff;
+        border: none;
+        padding: 6px 12px;
+        font-size: clamp(11px, 2vw, 13px);
+        font-weight: 600;
+        border-radius: 20px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 3px 10px rgba(13, 110, 253, 0.25);
+        transition: all 0.3s ease;
+        touch-action: manipulation;
+        min-height: 36px;
+        min-width: 44px;
+      }
+
+      .btn-dynamic-add:active {
+        transform: scale(0.95);
+      }
+
+      .ticker-wrap {
+        width: 100%;
+        background: rgba(220, 53, 69, 0.08);
+        border: 1px solid rgba(220, 53, 69, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 0;
+        margin-bottom: var(--spacing);
+        display: flex;
+        align-items: stretch;
+        font-family: "Hind Siliguri", sans-serif;
+      }
+
+      .ticker-label {
+        background: #dc3545;
+        color: #fff;
+        padding: 6px 12px;
+        font-size: clamp(11px, 2vw, 14px);
+        font-weight: 700;
+        border-radius: 7px 0 0 7px;
+        margin: 0;
+        z-index: 2;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        font-family: "Hind Siliguri", sans-serif;
+      }
+
+      .ticker-text {
+        display: inline-block;
+        padding-left: 100%;
+        animation: marquee 25s linear infinite;
+        font-size: clamp(12px, 2vw, 15px);
+        font-weight: 500;
+        color: var(--text-color);
+        font-family: "Hind Siliguri", sans-serif;
+        align-self: center;
+        padding-top: 6px;
+        padding-bottom: 6px;
+      }
+
+      .ticker-wrap:hover .ticker-text {
+        animation-play-state: paused;
+      }
+
+      @keyframes marquee {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(-100%, 0);
+        }
+      }
+
+      h3 {
+        color: var(--primary-color);
+        font-size: clamp(16px, 3vw, 22px);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        margin-bottom: var(--spacing);
+      }
+
+      .stat-card {
+        background: var(--bg-color);
+        padding: 12px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        text-align: center;
+      }
+
+      .stat-card h4 {
+        font-size: clamp(11px, 2vw, 14px);
+        opacity: 0.8;
+        margin-bottom: 4px;
+      }
+      .stat-card p {
+        font-size: clamp(16px, 3vw, 20px);
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+
+      .section {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        padding: var(--spacing);
+        border-radius: 8px;
+        margin-bottom: var(--spacing);
+      }
+
+      .top-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+      }
+
+      .multi-med-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 12px;
+        padding: 12px;
+        background: var(--card-bg);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+      }
+
+      .multi-med-row .row-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .multi-med-row input,
+      .multi-med-row select {
+        width: 100%;
+        min-height: 40px;
+        padding: 8px 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        outline: none;
+        background: var(--input-bg);
+        color: var(--text-color);
+        font-size: clamp(13px, 2vw, 14px);
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .multi-med-row select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+      }
+
+      label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 4px;
+        font-size: clamp(12px, 2vw, 14px);
+      }
+
+      input,
+      select {
+        width: 100%;
+        min-height: 40px;
+        padding: 8px 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        outline: none;
+        background: var(--input-bg);
+        color: var(--text-color);
+        font-size: clamp(13px, 2vw, 14px);
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+        margin-top: 10px;
+        max-height: 420px;
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 500px;
+      }
+
+      th {
+        background: var(--table-header);
+        color: #fff;
+        padding: 10px 8px;
+        font-size: clamp(11px, 2vw, 14px);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        white-space: nowrap;
+      }
+
+      td {
+        border: 1px solid var(--border-color);
+        padding: 8px 6px;
+        text-align: center;
+        font-size: clamp(12px, 2vw, 14px);
+        background: var(--card-bg);
+        word-break: break-word;
+      }
+
+      .animated-row {
+        animation: fadeInUp 0.4s ease forwards;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      .animated-row:hover {
+        background-color: rgba(13, 110, 253, 0.08);
+        transform: translateY(-2px) scale(1.005);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.12);
+        z-index: 3;
+        position: relative;
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .summary {
+        background: var(--bg-color);
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: clamp(14px, 2.5vw, 16px);
+        line-height: 28px;
+        border: 1px solid var(--border-color);
+        max-width: 100%;
+        margin-top: 12px;
+      }
+
+      @media (min-width: 600px) {
+        .summary {
+          max-width: 350px;
+          margin-left: auto;
+        }
+      }
+
+      .badge {
+        background: rgba(13, 110, 253, 0.15);
+        color: var(--primary-color);
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: clamp(10px, 1.8vw, 12px);
+        white-space: nowrap;
+      }
+
+      .med-icon {
+        width: clamp(20px, 3vw, 24px);
+        height: clamp(20px, 3vw, 24px);
+        object-fit: contain;
+        filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+        flex-shrink: 0;
+      }
+
+      .med-name {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: bold;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      td .med-name {
+        justify-content: flex-start;
+        text-align: left;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+        padding: 10px;
+      }
+
+      .modal-content {
+        background: var(--card-bg);
+        width: 100%;
+        max-width: 900px;
+        max-height: 95vh;
+        overflow-y: auto;
+        border-radius: var(--radius);
+        padding: var(--spacing);
+        position: relative;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .close-modal {
+        position: sticky;
+        top: 0;
+        float: right;
+        font-size: 28px;
+        cursor: pointer;
+        font-weight: bold;
+        z-index: 10;
+        background: var(--card-bg);
+        padding: 0 8px;
+        border-radius: 50%;
+        line-height: 1;
+      }
+
+      #toast {
+        visibility: hidden;
+        min-width: 200px;
+        max-width: 90%;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 8px;
+        padding: 12px 16px;
+        position: fixed;
+        z-index: 2000;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: clamp(13px, 2vw, 14px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      #toast.show {
+        visibility: visible;
+        animation: toastFade 3s ease forwards;
+      }
+
+      @keyframes toastFade {
+        0% {
+          opacity: 0;
+          transform: translateX(-50%) translateY(20px);
+        }
+        15% {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
+        85% {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(-50%) translateY(-20px);
+        }
+      }
+
+      .print-header {
+        display: none;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .print-footer-admin {
+        display: none;
+        margin-top: 30px;
+        text-align: right;
+        font-size: 14px;
+      }
+
+      .site-footer {
+        background: var(--card-bg);
+        border-top: 1px solid var(--border-color);
+        margin-top: 20px;
+        padding: 12px 16px;
+        text-align: center;
+        flex-shrink: 0;
+        width: 100%;
+      }
+
+      .footer-bottom {
+        font-size: clamp(11px, 2vw, 13.5px);
+        opacity: 0.8;
+        font-weight: 500;
+      }
+
+      @media print {
+        body {
+          background: #fff !important;
+          color: #000 !important;
+          padding: 0 !important;
+          width: 100% !important;
+          font-size: 12px !important;
+        }
+
+        .container {
+          display: none !important;
+        }
+
+        #loginModal {
+          display: none !important;
+        }
+
+        .modal-overlay {
+          display: block !important;
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100% !important;
+          height: auto !important;
+          background: transparent !important;
+          overflow: visible !important;
+          z-index: 9999 !important;
+          padding: 10px !important;
+        }
+
+        .modal-content {
+          box-shadow: none !important;
+          max-width: 100% !important;
+          width: 100% !important;
+          padding: 15px !important;
+          margin: 0 !important;
+          background: #fff !important;
+          overflow: visible !important;
+          max-height: none !important;
+          border-radius: 0 !important;
+        }
+
+        .no-print,
+        button,
+        .close-modal,
+        .stats-grid,
+        .site-footer,
+        .ticker-wrap,
+        .no-print {
+          display: none !important;
+        }
+
+        .print-show {
+          display: inline-block !important;
+        }
+
+        .print-header {
+          display: block !important;
+          text-align: center !important;
+          margin-bottom: 15px !important;
+        }
+
+        .print-footer-admin.show-admin {
+          display: block !important;
+        }
+
+        input {
+          display: none !important;
+        }
+
+        .print-dose-show {
+          display: inline-block !important;
+          font-weight: bold !important;
+        }
+
+        th {
+          background: #333 !important;
+          color: #fff !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+          padding: 6px 8px !important;
+          font-size: 11px !important;
+        }
+
+        td {
+          padding: 5px 6px !important;
+          font-size: 11px !important;
+          border: 1px solid #000 !important;
+        }
+
+        .section {
+          border: 1px solid #ccc !important;
+          background: #fff !important;
+          width: 100% !important;
+          box-shadow: none !important;
+          padding: 12px !important;
+          margin-bottom: 10px !important;
+        }
+
+        table {
+          width: 100% !important;
+          min-width: auto !important;
+          border-collapse: collapse !important;
+          font-size: 10px !important;
+        }
+
+        .table-wrap {
+          overflow: visible !important;
+          max-height: none !important;
+        }
+
+        .top-grid {
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          gap: 8px !important;
+        }
+
+        .summary {
+          max-width: 100% !important;
+          margin-left: 0 !important;
+          padding: 10px !important;
+          font-size: 12px !important;
+        }
+
+        h2 {
+          font-size: 18px !important;
+        }
+
+        h3 {
+          font-size: 14px !important;
+        }
+
+        label {
+          font-size: 11px !important;
+        }
+
+        .badge {
+          font-size: 10px !important;
+        }
+
+        .med-icon {
+          width: 16px !important;
+          height: 16px !important;
+        }
+      }
+
+      @media (min-width: 768px) {
+        body {
+          padding: 20px 20px 0 20px;
+        }
+
+        .container {
+          padding: 25px;
+        }
+
+        .multi-med-row {
+          grid-template-columns: 2fr 1.2fr 1.2fr 1fr 1fr 40px;
+          gap: 10px;
+          padding: 0;
+          background: transparent;
+          border: none;
+          border-radius: 0;
+          margin-bottom: 10px;
+        }
+
+        .multi-med-row .row-actions {
+          justify-content: center;
+        }
+
+        .header-bar .left-buttons,
+        .header-bar .right-buttons {
+          gap: 10px;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 15px;
+        }
+
+        .top-grid {
+          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+          gap: 12px;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .header-bar {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+
+        .header-bar .left-buttons,
+        .header-bar .right-buttons {
+          justify-content: center;
+          width: 100%;
+        }
+
+        .header-bar .left-buttons {
+          order: 2;
+        }
+        .header-bar .right-buttons {
+          order: 1;
+        }
+
+        .header-bar button,
+        .admin-profile-badge {
+          flex: 1;
+          min-width: 0;
+          font-size: clamp(11px, 2.5vw, 13px);
+          padding: 6px 10px;
+        }
+
+        .multi-med-row .row-actions {
+          justify-content: flex-end;
+        }
+
+        .multi-med-row .row-actions button {
+          min-width: 44px;
+          min-height: 40px;
+        }
+
+        .section-db .header-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .section-db .header-bar > div {
+          width: 100%;
+        }
+
+        .section-db .header-bar select,
+        .section-db .header-bar input {
+          width: 100%;
+        }
+
+        .admin-profile-badge {
+          font-size: clamp(10px, 2vw, 12px);
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 6px;
+        }
+
+        .container {
+          padding: 10px;
+          border-radius: 8px;
+        }
+
+        .section {
+          padding: 10px;
+        }
+
+        .modal-content {
+          padding: 12px;
+          max-height: 98vh;
+        }
+
+        table {
+          min-width: 400px;
+        }
+
+        td,
+        th {
+          padding: 6px 4px;
+          font-size: 11px;
+        }
+
+        .summary {
+          padding: 10px 12px;
+          font-size: 13px;
+          line-height: 24px;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 6px;
+        }
+
+        .stat-card {
+          padding: 8px 6px;
+        }
+
+        .stat-card h4 {
+          font-size: 10px;
+        }
+        .stat-card p {
+          font-size: 14px;
+        }
+      }
+
+      /* Animated Clean Title Styles */
+      .animated-system-title {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--primary-color);
+        animation: titleFadeIn 0.8s ease-out forwards;
+        cursor: pointer;
+        transition:
+          transform 0.3s ease,
+          text-shadow 0.3s ease;
+      }
+
+      .animated-system-title:hover {
+        transform: scale(1.02);
+        text-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+      }
+
+      /* Logo pulse animation */
+      .animated-logo-icon {
+        animation: logoPulse 2s infinite ease-in-out;
+        filter: drop-shadow(0 4px 8px rgba(13, 110, 253, 0.3));
+      }
+
+      @keyframes titleFadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(-15px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes logoPulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.08);
+          filter: drop-shadow(0 6px 12px rgba(13, 110, 253, 0.5));
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 20px">
+        <h2 class="animated-system-title">
+          <!-- Animated SVG Logo -->
+          <svg
+            class="animated-logo-icon"
+            width="40"
+            height="40"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="16" cy="16" r="16" fill="url(#logoGradient)" />
+            <path d="M14 8H18V14H24V18H18V24H14V18H8V14H14V8Z" fill="white" />
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0"
+                y1="0"
+                x2="32"
+                y2="32"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="#0d6efd" />
+                <stop offset="1" stop-color="#009879" />
+              </linearGradient>
+            </defs>
+          </svg>
+          Pharmacy Management System
+        </h2>
+      </div>
+
+      <div class="header-bar">
+        <div class="left-buttons">
+          <button
+            id="adminLoginBtn"
+            class="btn-success"
+            onclick="openLoginModal()"
+          >
+            🔐 Admin Login
+          </button>
+          <div
+            id="loggedInAdminBadge"
+            class="admin-profile-badge"
+            style="display: none"
+          >
+            👤 <span id="adminNameText"></span>
+          </div>
+        </div>
+
+        <div class="right-buttons">
+          <button class="btn-secondary" onclick="toggleDarkMode()">
+            🌓 Mode
+          </button>
+          <button class="btn-primary" onclick="openModal()">
+            🛒 View Slip (<span id="cartCount">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <div class="ticker-wrap no-print">
+        <div class="ticker-label">বিজ্ঞপ্তি</div>
+        <div class="ticker-text">
+          ⚠️ সতর্কবার্তা: এই অ্যাপ্লিকেশনটি কেবল অভ্যন্তরীণ এবং ব্যক্তিগত
+          ব্যবহারের জন্য তৈরি। সমস্ত ওষুধের বিস্তারিত, ডোজ এবং মূল্য শারীরিক
+          প্যাকেট এবং অফিসিয়াল ডাক্তারের প্রেসক্রিপশনের সাথে যাচাই সাপেক্ষ।
+        </div>
+      </div>
+
+      <div class="stats-grid no-print">
+        <div class="stat-card">
+          <h4>Total Medicines</h4>
+          <p id="statTotal">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Cart Items</h4>
+          <p id="statCart">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Estimated Bill</h4>
+          <p id="statBill">0.00 Tk</p>
+        </div>
+      </div>
+
+      <div
+        id="adminAddSec"
+        class="section no-print"
+        style="display: none; border: 2px dashed var(--primary-color)"
+      >
+        <div class="header-bar" style="margin-bottom: 10px">
+          <h3
+            style="color: #198754; font-size: clamp(14px, 2.5vw, 18px)"
+            id="adminPanelTitle"
+          >
+            👑 Admin Panel: Add New Medicines
+          </h3>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap">
+            <button class="btn-primary" onclick="addNewRow()">+ Add Row</button>
+            <button class="btn-success" onclick="saveAllMedicines()">
+              💾 Add Medicines
+            </button>
+          </div>
+        </div>
+        <div id="multiMedContainer"></div>
+      </div>
+
+      <div class="section section-db">
+        <div class="header-bar" style="margin-bottom: 10px">
+          <h3 style="font-size: clamp(14px, 2.5vw, 18px)">
+            Available Medicine List
+          </h3>
+
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; width: 100%">
+            <select
+              id="filterCategory"
+              style="flex: 1; min-width: 120px"
+              onchange="renderDatabase()"
+            >
+              <option value="ALL">All Category</option>
+            </select>
+            <input
+              type="text"
+              id="search"
+              placeholder="Search medicine..."
+              style="flex: 2; min-width: 140px"
+              oninput="renderDatabase()"
+            />
+          </div>
+        </div>
+
+        <div id="medicineDisplayContainer">
+          <div class="table-wrap" id="tableViewWrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th style="text-align: left">Medicine Name</th>
+                  <th>Category</th>
+                  <th>Unit Price</th>
+                  <th>Strip Price</th>
+                </tr>
+              </thead>
+              <tbody id="dbTable">
+                <tr>
+                  <td colspan="5">Loading data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay no-print" id="loginModal">
+      <div class="modal-content" style="max-width: 400px">
+        <span class="close-modal" onclick="closeLoginModal()">&times;</span>
+        <h3 style="margin-bottom: 15px; text-align: center">Admin Login</h3>
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <div>
+            <label>Username</label>
+            <input
+              type="text"
+              id="loginUsername"
+              placeholder="Enter admin username"
+            />
+          </div>
+          <div>
+            <label>Password</label>
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Enter password"
+            />
+          </div>
+          <button
+            class="btn-success"
+            style="margin-top: 10px; width: 100%; min-height: 44px"
+            onclick="submitAdminLogin()"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="billingModal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+
+        <div class="print-header">
+          <h2>Pharmacy Management System</h2>
+          <p>Digital Prescription & Cash Memo</p>
+          <hr style="margin: 10px 0" />
+        </div>
+
+        <div class="section" style="margin-bottom: 12px">
+          <h3 style="font-size: clamp(14px, 2.5vw, 18px)">
+            Patient & Prescription Info
+          </h3>
+          <div class="top-grid">
+            <div>
+              <label>Patient Name</label>
+              <input
+                id="patient"
+                type="text"
+                placeholder="Enter patient name"
+              />
+              <span
+                class="print-show"
+                id="p_name_show"
+                style="display: none; font-weight: bold"
+              ></span>
+            </div>
+            <div>
+              <label>Date</label>
+              <input type="date" id="date" />
+              <span
+                class="print-show"
+                id="p_date_show"
+                style="display: none; font-weight: bold"
+              ></span>
+            </div>
+            <div>
+              <label>Duration</label>
+              <input
+                type="number"
+                id="days"
+                value="1"
+                min="1"
+                oninput="calculateCart()"
+              />
+              <span
+                class="print-show"
+                id="p_days_show"
+                style="display: none; font-weight: bold"
+              ></span>
+            </div>
+            <div>
+              <label>Discount %</label>
+              <input
+                type="number"
+                id="discount"
+                placeholder="0"
+                min="0"
+                max="100"
+                oninput="calculateCart()"
+              />
+              <span
+                class="print-show"
+                id="p_discount_show"
+                style="display: none; font-weight: bold"
+              ></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="header-bar" style="margin-bottom: 10px">
+            <h3 style="font-size: clamp(14px, 2.5vw, 18px)">
+              Selected Medicines
+            </h3>
+            <div>
+              <button
+                class="btn-secondary no-print"
+                onclick="triggerCustomPrint()"
+                style="min-height: 40px"
+              >
+                🖨️ Print Memo
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr style="background: #198754">
+                  <th>Sl.</th>
+                  <th style="text-align: left">Medicine Name</th>
+                  <th>Category</th>
+                  <th>Dose</th>
+                  <th>Unit Price</th>
+                  <th>Qty</th>
+                  <th>Amount</th>
+                  <th class="no-print">Action</th>
+                </tr>
+              </thead>
+              <tbody id="cartTable"></tbody>
+            </table>
+          </div>
+
+          <div class="summary">
+            <div>Subtotal : <span id="subtotalText">0.00</span> Tk</div>
+            <div>Discount : <span id="discountText">0.00</span> Tk</div>
+            <hr style="margin: 5px 0" />
+            <strong>Net Total : <span id="totalText">0.00</span> Tk</strong>
+          </div>
+        </div>
+
+        <div class="print-footer-admin" id="printFooterAdmin">
+          <p>Prepared By: <strong id="printAdminName"></strong></p>
+          <p
+            style="
+              margin-top: 40px;
+              border-top: 1px solid #000;
+              display: inline-block;
+              padding-top: 5px;
+            "
+          >
+            Authorized Signature
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast">Message</div>
+
+    <footer class="site-footer no-print">
+      <div class="footer-bottom">
+        &copy; 2026 Pharmacy Management System. Designed & Developed by Md Sojib
+        Hossen.
+      </div>
+    </footer>
+
+    <script>
+      const GOOGLE_SHEET_URL =
+        "https://script.google.com/macros/s/AKfycbwMQIUbG1cm3nPOOdiM2DrXiOwrxbrgD2vAmbXp5dlR68bWfI6Was-Wp8pRICIx2yEt/exec";
+
+      const adminsList = [
+        { username: "Sojib", password: "Fatema@015", name: "Md Sojib Hossen" },
+        { username: "Fatema", password: "Sojib@015", name: "Fatema Khatun" },
+        { username: "Admin", password: "admin@015", name: "System Admin" },
+      ];
+
+      let loggedInAdmin = null;
+      let categoriesList = [
+        "Tablet",
+        "Capsule",
+        "Syrup",
+        "Injection",
+        "Drop",
+        "Suppository",
+        "Cream",
+        "Ointment",
+        "Gel",
+        "Inhaler",
+      ];
+      let dbMedicines = [];
+      let cart = [];
+      let rowCounter = 0;
+
+      document.getElementById("date").value = new Date()
+        .toISOString()
+        .split("T")[0];
+
+      const savedAdmin = localStorage.getItem("logged_admin");
+      if (savedAdmin) {
+        try {
+          loggedInAdmin = JSON.parse(savedAdmin);
+          updateAdminUI();
+        } catch (e) {
+          localStorage.removeItem("logged_admin");
+        }
+      }
+
+      function updateAdminUI() {
+        if (loggedInAdmin) {
+          document.getElementById("adminAddSec").style.display = "block";
+          document.getElementById("adminPanelTitle").innerText =
+            `👑 Admin Panel: Add New Medicines (${loggedInAdmin.name})`;
+          const badge = document.getElementById("loggedInAdminBadge");
+          document.getElementById("adminNameText").innerText =
+            loggedInAdmin.name;
+          badge.style.display = "inline-flex";
+          const btn = document.getElementById("adminLoginBtn");
+          btn.innerText = "🔓 Logout";
+          btn.className = "btn-danger";
+        } else {
+          document.getElementById("adminAddSec").style.display = "none";
+          document.getElementById("adminLoginBtn").innerText = "🔐 Admin Login";
+          document.getElementById("adminLoginBtn").className = "btn-success";
+          document.getElementById("loggedInAdminBadge").style.display = "none";
+        }
+      }
+
+      function openLoginModal() {
+        if (!loggedInAdmin) {
+          document.getElementById("loginUsername").value = "";
+          document.getElementById("loginPassword").value = "";
+          document.getElementById("loginModal").style.display = "flex";
+        } else {
+          loggedInAdmin = null;
+          localStorage.removeItem("logged_admin");
+          updateAdminUI();
+          showToast("Logged out from Admin Panel.");
+          document.getElementById("multiMedContainer").innerHTML = "";
+          rowCounter = 0;
+          addNewRow();
+        }
+      }
+
+      function closeLoginModal() {
+        document.getElementById("loginModal").style.display = "none";
+      }
+
+      function submitAdminLogin() {
+        const uInput = document.getElementById("loginUsername").value.trim();
+        const pInput = document.getElementById("loginPassword").value.trim();
+        const foundAdmin = adminsList.find(
+          (a) => a.username === uInput && a.password === pInput,
+        );
+
+        if (foundAdmin) {
+          loggedInAdmin = foundAdmin;
+          localStorage.setItem("logged_admin", JSON.stringify(foundAdmin));
+          closeLoginModal();
+          updateAdminUI();
+          document.getElementById("multiMedContainer").innerHTML = "";
+          rowCounter = 0;
+          addNewRow();
+          showToast(`Welcome, ${loggedInAdmin.name}!`);
+        } else {
+          showToast("❌ Invalid Username or Password!");
+        }
+      }
+
+      function initCategories() {
+        const customCats = JSON.parse(
+          localStorage.getItem("custom_categories") || "[]",
+        );
+        const dbCats = dbMedicines.map((m) => m.category).filter(Boolean);
+        const combined = Array.from(
+          new Set([...categoriesList, ...dbCats, ...customCats]),
+        );
+
+        categoriesList = combined.sort((a, b) => {
+          if (a === "Tablet") return -1;
+          if (b === "Tablet") return 1;
+          if (a === "Capsule") return -1;
+          if (b === "Capsule") return 1;
+          return a.localeCompare(b);
+        });
+
+        updateFilterDropdown();
+        updateAllRowDropdowns();
+      }
+
+      function updateFilterDropdown() {
+        const filterSelect = document.getElementById("filterCategory");
+        const currentVal = filterSelect.value;
+
+        filterSelect.innerHTML = '<option value="ALL">All Category</option>';
+        categoriesList.forEach((cat) => {
+          filterSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
+
+        if (categoriesList.includes(currentVal)) {
+          filterSelect.value = currentVal;
+        } else {
+          filterSelect.value = "ALL";
+        }
+      }
+
+      function getCategoryOptionsHTML() {
+        let html = `<option value="" disabled selected hidden>Select Category</option>`;
+        html += categoriesList
+          .map((cat) => `<option value="${cat}">${cat}</option>`)
+          .join("");
+        html += `<option value="ADD_NEW" style="font-weight:bold; color: #0d6efd;">➕ Add New Category...</option>`;
+        return html;
+      }
+
+      function updateAllRowDropdowns() {
+        const selects = document.querySelectorAll(".new_category");
+        selects.forEach((select) => {
+          const val = select.value;
+          select.innerHTML = getCategoryOptionsHTML();
+          if (categoriesList.includes(val)) {
+            select.value = val;
+          } else if (!val) {
+            select.value = "";
+          }
+        });
+      }
+
+      function handleCategoryChange(selectElement) {
+        if (selectElement.value === "ADD_NEW") {
+          const newCat = prompt("Enter New Category Name:");
+          if (newCat && newCat.trim() !== "") {
+            const formattedCat = newCat.trim();
+            const finalCat =
+              formattedCat.charAt(0).toUpperCase() + formattedCat.slice(1);
+
+            if (!categoriesList.includes(finalCat)) {
+              categoriesList.push(finalCat);
+              const customCats = JSON.parse(
+                localStorage.getItem("custom_categories") || "[]",
+              );
+              customCats.push(finalCat);
+              localStorage.setItem(
+                "custom_categories",
+                JSON.stringify(customCats),
+              );
+              initCategories();
+            }
+            selectElement.value = finalCat;
+          } else {
+            selectElement.value = "";
+          }
+        }
+      }
+
+      function getCategoryIcon(cat) {
+        let imgUrl = "";
+        switch ((cat || "").toLowerCase()) {
+          case "tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+          case "capsule":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/capsule.png";
+            break;
+          case "syrup":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/syrup-2.png";
+            break;
+          case "injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+          case "drop":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/eye-drop-3.png";
+            break;
+          case "suppository":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/suppository.png";
+            break;
+          case "cream":
+          case "ointment":
+          case "gel":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/ointment.png";
+            break;
+          case "inhaler":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/dry-powder-inhalation.png";
+            break;
+          default:
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+        }
+        return `<img src="${imgUrl}" alt="${cat}" class="med-icon" loading="lazy">`;
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        toast.innerText = msg;
+        toast.className = "show";
+        setTimeout(() => {
+          toast.className = toast.className.replace("show", "");
+        }, 3000);
+      }
+
+      function toggleDarkMode() {
+        const theme =
+          document.body.getAttribute("data-theme") === "dark"
+            ? "light"
+            : "dark";
+        document.body.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+      }
+
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.setAttribute("data-theme", "dark");
+      }
+
+      async function fetchMedicines() {
+        const cachedData = localStorage.getItem("cached_medicines");
+        if (cachedData) {
+          try {
+            dbMedicines = JSON.parse(cachedData);
+            initCategories();
+            renderDatabase();
+          } catch (e) {
+            console.error("Error parsing cached data", e);
+          }
+        }
+
+        try {
+          let response = await fetch(GOOGLE_SHEET_URL);
+          if (!response.ok) throw new Error("Network response was not ok");
+          dbMedicines = await response.json();
+          localStorage.setItem("cached_medicines", JSON.stringify(dbMedicines));
+          initCategories();
+          renderDatabase();
+        } catch (error) {
+          console.error("Fetch error:", error);
+          if (!cachedData) {
+            showToast("⚠️ Could not load data. Please check your connection.");
+          } else {
+            showToast("Offline mode: Loaded cached data.");
+          }
+        }
+      }
+
+      function renderDatabase() {
+        const searchVal = document.getElementById("search").value.toLowerCase();
+        const catVal = document.getElementById("filterCategory").value;
+        const tbody = document.getElementById("dbTable");
+
+        tbody.innerHTML = "";
+
+        const filtered = dbMedicines.filter((m) => {
+          const matchesSearch = m.name.toLowerCase().includes(searchVal);
+          const matchesCat = catVal === "ALL" || m.category === catVal;
+          return matchesSearch && matchesCat;
+        });
+
+        document.getElementById("statTotal").innerText = dbMedicines.length;
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5">No medicine found</td></tr>';
+          return;
+        }
+
+        filtered.forEach((m, index) => {
+          const iconHTML = getCategoryIcon(m.category);
+          const delay = (index * 0.03).toFixed(2);
+
+          tbody.innerHTML += `
+            <tr class="animated-row" style="animation-delay: ${delay}s;">
+                <td><button class="btn-dynamic-add" onclick="addToCart('${m.name.replace(/'/g, "\\'")}', '${m.category || "Tablet"}', ${m.unitPrice})">➕ Add</button></td>
+                <td><div class="med-name">${iconHTML} <span>${m.name}</span></div></td>
+                <td><span class="badge">${m.category || "Tablet"}</span></td>
+                <td>${m.unitPrice.toFixed(2)} Tk</td>
+                <td>${m.stripPrice.toFixed(2)} Tk</td>
+            </tr>
+        `;
+        });
+      }
+
+      function addNewRow() {
+        rowCounter++;
+        const container = document.getElementById("multiMedContainer");
+        const rowDiv = document.createElement("div");
+        rowDiv.className = "multi-med-row";
+        rowDiv.id = `medRow_${rowCounter}`;
+
+        rowDiv.innerHTML = `
+          <input type="text" class="new_name" placeholder="Medicine Name">
+          <input type="text" class="new_power" placeholder="Dosage" oninput="this.value = this.value.replace(/[^0-9.+-]/g, '')">
+          <select class="new_category" onchange="handleCategoryChange(this)">
+              ${getCategoryOptionsHTML()}
+          </select>
+          <input type="number" step="0.01" class="new_unit" placeholder="Unit Price">
+          <input type="number" step="0.01" class="new_strip" placeholder="Strip Price">
+          <div class="row-actions">
+            <button class="btn-danger" style="min-width:44px; min-height:40px; padding:8px 12px;" onclick="removeRow('medRow_${rowCounter}')">✕</button>
+          </div>
+        `;
+        container.appendChild(rowDiv);
+      }
+
+      function removeRow(rowId) {
+        const row = document.getElementById(rowId);
+        if (document.querySelectorAll(".multi-med-row").length > 1) {
+          row.remove();
+        } else {
+          showToast("At least one entry row is required!");
+        }
+      }
+
+      function formatPowerString(input) {
+        if (!input) return "";
+        return input
+          .split("+")
+          .map((part) => part.trim())
+          .filter((part) => part.length > 0)
+          .map((part) =>
+            part.toLowerCase().endsWith("mg") ? part : `${part}mg`,
+          )
+          .join("+");
+      }
+
+      async function saveAllMedicines() {
+        if (!loggedInAdmin) {
+          showToast("⚠️ Unauthorized access! Please login as Admin.");
+          return;
+        }
+
+        const rows = document.querySelectorAll(".multi-med-row");
+        let medicinesToSave = [];
+        let hasError = false;
+        let errorMessage = "";
+
+        rows.forEach((row) => {
+          const rawName = row.querySelector(".new_name").value.trim();
+          const rawPower = row.querySelector(".new_power").value.trim();
+          const category = row.querySelector(".new_category").value;
+          const unitPrice =
+            parseFloat(row.querySelector(".new_unit").value) || 0;
+          const stripPrice =
+            parseFloat(row.querySelector(".new_strip").value) || 0;
+
+          if (!rawName) {
+            hasError = true;
+            errorMessage = "Please fill in all medicine names!";
+            return;
+          }
+          if (!category || category === "ADD_NEW") {
+            hasError = true;
+            errorMessage = "Please select a valid Category!";
+            return;
+          }
+          if (unitPrice <= 0) {
+            hasError = true;
+            errorMessage = "Unit Price must be greater than 0!";
+            return;
+          }
+
+          const powerFormatted = formatPowerString(rawPower);
+          const fullName = powerFormatted
+            ? `${rawName} ${powerFormatted}`
+            : rawName;
+
+          const isDuplicateDB = dbMedicines.some(
+            (m) =>
+              m.name.toLowerCase() === fullName.toLowerCase() &&
+              m.category.toLowerCase() === category.toLowerCase(),
+          );
+          const isDuplicateBatch = medicinesToSave.some(
+            (m) =>
+              m.name.toLowerCase() === fullName.toLowerCase() &&
+              m.category.toLowerCase() === category.toLowerCase(),
+          );
+
+          if (isDuplicateDB || isDuplicateBatch) {
+            hasError = true;
+            errorMessage = `⚠️ "${fullName} (${category})" already exists in Database!`;
+            return;
+          }
+
+          medicinesToSave.push({
+            name: fullName,
+            category,
+            unitPrice: unitPrice,
+            stripPrice: stripPrice > 0 ? stripPrice : 0,
+            addedBy: loggedInAdmin.name,
+            timestamp: new Date().toISOString(),
+          });
+        });
+
+        if (hasError) {
+          if (errorMessage) showToast(errorMessage);
+          return;
+        }
+
+        if (medicinesToSave.length === 0) {
+          showToast("No valid medicines to save!");
+          return;
+        }
+
+        showToast(
+          `Saving ${medicinesToSave.length} medicine(s) to database...`,
+        );
+
+        let savedCount = 0;
+        for (let med of medicinesToSave) {
+          try {
+            await fetch(GOOGLE_SHEET_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(med),
+            });
+            savedCount++;
+            dbMedicines.push(med);
+          } catch (error) {
+            console.error("Save error for medicine:", med.name, error);
+          }
+        }
+
+        localStorage.setItem("cached_medicines", JSON.stringify(dbMedicines));
+        initCategories();
+        renderDatabase();
+
+        if (savedCount === medicinesToSave.length) {
+          showToast(
+            `✅ ${medicinesToSave.length} Medicine(s) added successfully!`,
+          );
+        } else {
+          showToast(
+            `⚠️ ${savedCount} out of ${medicinesToSave.length} medicine(s) saved. Some may have failed.`,
+          );
+        }
+
+        document.getElementById("multiMedContainer").innerHTML = "";
+        rowCounter = 0;
+        addNewRow();
+      }
+
+      function addToCart(name, category, unitPrice) {
+        const existing = cart.find(
+          (item) => item.name === name && item.category === category,
+        );
+        if (!existing) {
+          cart.push({ name, category, unitPrice, dose: 1 });
+          renderCart();
+          showToast("✅ Added to Cart!");
+        } else {
+          showToast("⏳ Already in cart!");
+        }
+      }
+
+      function renderCart() {
+        const tbody = document.getElementById("cartTable");
+        tbody.innerHTML = "";
+
+        if (cart.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="8">Cart is empty</td></tr>';
+          document.getElementById("cartCount").innerText = "0";
+          document.getElementById("statCart").innerText = "0";
+          document.getElementById("subtotalText").innerText = "0.00";
+          document.getElementById("discountText").innerText = "0.00";
+          document.getElementById("totalText").innerText = "0.00";
+          document.getElementById("statBill").innerText = "0.00 Tk";
+          return;
+        }
+
+        cart.forEach((item, index) => {
+          const iconHTML = getCategoryIcon(item.category);
+          tbody.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td><div class="med-name">${iconHTML} <span>${item.name}</span></div></td>
+                <td><span class="badge">${item.category}</span></td>
+                <td>
+                    <input type="number" min="0" step="any" value="${item.dose}" id="dose_${index}" style="width:60px; min-height:32px; text-align:center; padding:4px;" oninput="updateDose(${index}, this.value)">
+                </td>
+                <td>${item.unitPrice.toFixed(2)} Tk</td>
+                <td id="qty_${index}">0</td>
+                <td id="amt_${index}">0.00 Tk</td>
+                <td class="no-print">
+                    <button class="btn-danger" style="padding:4px 8px; min-height:32px; font-size:12px;" onclick="removeFromCart(${index})">Remove</button>
+                </td>
+            </tr>
+        `;
+        });
+        calculateCart();
+      }
+
+      function updateDose(index, val) {
+        const dose = parseFloat(val);
+        cart[index].dose = isNaN(dose) ? 0 : dose;
+        calculateCart();
+      }
+
+      function calculateCart() {
+        const days = parseFloat(document.getElementById("days").value) || 0;
+        const discountPercent =
+          parseFloat(document.getElementById("discount").value) || 0;
+        let subtotal = 0;
+
+        cart.forEach((item, index) => {
+          const totalQty = item.dose * days;
+          const totalAmount = totalQty * item.unitPrice;
+          subtotal += totalAmount;
+
+          const qtyEl = document.getElementById(`qty_${index}`);
+          const amtEl = document.getElementById(`amt_${index}`);
+          if (qtyEl) qtyEl.innerText = totalQty.toFixed(0);
+          if (amtEl) amtEl.innerText = totalAmount.toFixed(2) + " Tk";
+        });
+
+        const discountAmount = (subtotal * discountPercent) / 100;
+        const grandTotal = subtotal - discountAmount;
+
+        document.getElementById("subtotalText").innerText = subtotal.toFixed(2);
+        document.getElementById("discountText").innerText =
+          discountAmount.toFixed(2);
+        document.getElementById("totalText").innerText = grandTotal.toFixed(2);
+
+        document.getElementById("cartCount").innerText = cart.length;
+        document.getElementById("statCart").innerText = cart.length;
+        document.getElementById("statBill").innerText =
+          grandTotal.toFixed(2) + " Tk";
+      }
+
+      function removeFromCart(index) {
+        cart.splice(index, 1);
+        renderCart();
+        showToast("🗑️ Item removed.");
+      }
+
+      function openModal() {
+        document.getElementById("billingModal").style.display = "flex";
+        renderCart();
+      }
+
+      function closeModal() {
+        document.getElementById("billingModal").style.display = "none";
+      }
+
+      window.onclick = function (e) {
+        if (e.target === document.getElementById("billingModal")) closeModal();
+        if (e.target === document.getElementById("loginModal"))
+          closeLoginModal();
+      };
+
+      function triggerCustomPrint() {
+        const patientName = document.getElementById("patient").value || "N/A";
+        const dateVal = document.getElementById("date").value;
+        const daysVal = document.getElementById("days").value || "1";
+        const discountVal = document.getElementById("discount").value || "0";
+
+        document.getElementById("p_name_show").innerText = patientName;
+        document.getElementById("p_date_show").innerText = dateVal;
+        document.getElementById("p_days_show").innerText = daysVal + " Days";
+        document.getElementById("p_discount_show").innerText =
+          discountVal + "%";
+
+        // Update cart doses from inputs
+        cart.forEach((item, index) => {
+          const doseInput = document.getElementById(`dose_${index}`);
+          if (doseInput) {
+            item.dose = parseFloat(doseInput.value) || 0;
+          }
+        });
+
+        // Force render cart data for print
+        const cartTable = document.getElementById("cartTable");
+        const rows = cartTable.querySelectorAll("tr");
+
+        // Remove old print dose spans
+        document
+          .querySelectorAll(".print-dose-show")
+          .forEach((el) => el.remove());
+
+        const days = parseFloat(document.getElementById("days").value) || 1;
+
+        rows.forEach((row, index) => {
+          if (index < cart.length) {
+            const cells = row.querySelectorAll("td");
+            if (cells.length >= 7) {
+              // Dose Cell (index 3)
+              const doseCell = cells[3];
+              const input = doseCell.querySelector("input");
+
+              const doseSpan = document.createElement("span");
+              doseSpan.className = "print-dose-show";
+              doseSpan.style.display = "inline-block";
+              doseSpan.style.fontWeight = "bold";
+              doseSpan.innerText = cart[index].dose || 0;
+
+              if (input) {
+                input.style.display = "none";
+                doseCell.appendChild(doseSpan);
+              }
+
+              // Quantity Cell (index 5)
+              const qtyCell = cells[5];
+              const totalQty = cart[index].dose * days;
+              qtyCell.innerText = totalQty.toFixed(0);
+
+              // Amount Cell (index 6)
+              const amtCell = cells[6];
+              const totalAmount = totalQty * cart[index].unitPrice;
+              amtCell.innerText = totalAmount.toFixed(2) + " Tk";
+            }
+          }
+        });
+
+        // Hide inputs, show spans
+        const inputs = document.querySelectorAll(".top-grid input");
+        inputs.forEach((input) => (input.style.display = "none"));
+
+        const spans = document.querySelectorAll(".print-show");
+        spans.forEach((span) => (span.style.display = "inline-block"));
+
+        // Admin footer
+        const footerAdmin = document.getElementById("printFooterAdmin");
+        if (loggedInAdmin) {
+          document.getElementById("printAdminName").innerText =
+            loggedInAdmin.name;
+          footerAdmin.classList.add("show-admin");
+        } else {
+          footerAdmin.classList.remove("show-admin");
+        }
+
+        // Browser-কে DOM update করার সময় দিন
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            window.print();
+          });
+        });
+      }
+
+      window.onafterprint = function () {
+        setTimeout(() => {
+          // Restore inputs
+          document.querySelectorAll(".top-grid input").forEach((input) => {
+            input.style.display = "block";
+          });
+
+          document.querySelectorAll(".print-show").forEach((span) => {
+            span.style.display = "none";
+          });
+
+          document.querySelectorAll(".print-dose-show").forEach((span) => {
+            span.remove();
+          });
+
+          document.querySelectorAll("#cartTable input").forEach((input) => {
+            input.style.display = "block";
+          });
+
+          // এখন Cart Clear হবে
+          cart = [];
+          renderCart();
+
+          document.getElementById("patient").value = "";
+          document.getElementById("days").value = "1";
+          document.getElementById("discount").value = "";
+
+          closeModal();
+          showToast("✅ Slip printed successfully!");
+        }, 1000);
+      };
+
+      initCategories();
+      addNewRow();
+      fetchMedicines();
+    </script>
+  </body>
+</html>
