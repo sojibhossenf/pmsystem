@@ -363,7 +363,7 @@
       .table-wrap {
         overflow-x: auto;
         margin-top: 10px;
-        max-height: 420px;
+        max-height: 550px;
         border-radius: 8px;
         -webkit-overflow-scrolling: touch;
       }
@@ -1541,6 +1541,9 @@
           return matchesSearch && matchesCat;
         });
 
+        // 👉 নতুন যোগ করুন: নাম অনুযায়ী সর্ট করার জন্য (Alphabetical Order)
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+
         document.getElementById("statTotal").innerText = dbMedicines.length;
 
         if (filtered.length === 0) {
@@ -1553,14 +1556,14 @@
           const delay = (index * 0.03).toFixed(2);
 
           tbody.innerHTML += `
-            <tr class="animated-row" style="animation-delay: ${delay}s;">
-                <td><button class="btn-dynamic-add" onclick="addToCart('${m.name.replace(/'/g, "\\'")}', '${m.category || "Tablet"}', ${m.unitPrice})">➕ Add</button></td>
-                <td><div class="med-name">${iconHTML} <span>${m.name}</span></div></td>
-                <td><span class="badge">${m.category || "Tablet"}</span></td>
-                <td>${m.unitPrice.toFixed(2)} Tk</td>
-                <td>${m.stripPrice.toFixed(2)} Tk</td>
-            </tr>
-        `;
+      <tr class="animated-row" style="animation-delay: ${delay}s;">
+          <td><button class="btn-dynamic-add" onclick="addToCart('${m.name.replace(/'/g, "\\'")}', '${m.category || "Tablet"}', ${m.unitPrice})">➕ Add</button></td>
+          <td><div class="med-name">${iconHTML} <span>${m.name}</span></div></td>
+          <td><span class="badge">${m.category || "Tablet"}</span></td>
+          <td>${m.unitPrice.toFixed(2)} Tk</td>
+          <td>${m.stripPrice.toFixed(2)} Tk</td>
+      </tr>
+    `;
         });
       }
 
