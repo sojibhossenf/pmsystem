@@ -1321,7 +1321,7 @@
 
     <script>
       const GOOGLE_SHEET_URL =
-        "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwMQIUbG1cm3nPOOdiM2DrXiOwrxbrgD2vAmbXp5dlR68bWfI6Was-Wp8pRICIx2yEt/exec";
+        "https://script.google.com/macros/s/AKfycbwMQIUbG1cm3nPOOdiM2DrXiOwrxbrgD2vAmbXp5dlR68bWfI6Was-Wp8pRICIx2yEt/exec";
 
       const adminsList = [
         { username: "Sojib", password: "Fatema@015", name: "Md Sojib Hossen" },
@@ -1565,24 +1565,23 @@
         }
       }
 
-      function getCategoryOptionsHTML() {
-        let html = `<option value="" disabled selected hidden>Select Category</option>`;
-        html += categoriesList
-          .map((cat) => `<option value="${cat}">${cat}</option>`)
-          .join("");
+      function getCategoryOptionsHTML(selectedCat = "") {
+        let html = `<option value="" disabled ${!selectedCat ? "selected" : ""} hidden>Select Category</option>`;
+        categoriesList.forEach((cat) => {
+          const isSel = cat === selectedCat ? "selected" : "";
+          html += `<option value="${cat}" ${isSel}>${cat}</option>`;
+        });
         html += `<option value="ADD_NEW" style="font-weight:bold; color: #0d6efd;">➕ Add New Category...</option>`;
         return html;
       }
 
       function updateAllRowDropdowns() {
-        const selects = document.querySelectorAll(".new_category");
-        selects.forEach((select) => {
-          const val = select.value;
-          select.innerHTML = getCategoryOptionsHTML();
-          if (categoriesList.includes(val)) {
-            select.value = val;
-          } else if (!val) {
-            select.value = "";
+        const rows = document.querySelectorAll(".multi-med-row");
+        rows.forEach((row) => {
+          const select = row.querySelector(".new_category");
+          if (select) {
+            const val = select.value;
+            select.innerHTML = getCategoryOptionsHTML(val);
           }
         });
       }
@@ -1608,6 +1607,7 @@
               initCategories();
             }
             selectElement.value = finalCat;
+            updateAllRowDropdowns();
           } else {
             selectElement.value = "";
           }
@@ -1616,8 +1616,7 @@
 
       function getCategoryIcon(cat) {
         const category = (cat || "").toLowerCase().trim();
-
-        let imgUrl = "";
+        let imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
 
         switch (category) {
           case "capsule":
@@ -1631,7 +1630,6 @@
           case "sprinkle capsule":
             imgUrl = "https://medex.com.bd/img/dosage-forms/capsule.png";
             break;
-
           case "tablet":
           case "chewable tablet":
           case "dispersible tablet":
@@ -1654,11 +1652,9 @@
           case "vaginal tablet":
             imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
             break;
-
           case "syrup":
             imgUrl = "https://medex.com.bd/img/dosage-forms/syrup-2.png";
             break;
-
           case "injection":
           case "im injection":
           case "im/ia injection":
@@ -1676,20 +1672,15 @@
           case "sc injection":
             imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
             break;
-
           case "iv infusion":
           case "emulsion for infusion":
           case "dialysis solution":
             imgUrl = "https://medex.com.bd/img/dosage-forms/iv-infusion.png";
             break;
-
           case "ear drop":
           case "nasal drop":
           case "pediatric drops":
           case "viscous eye drop":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/eye-drop-3.png";
-            break;
-
           case "ophthalmic solution":
           case "ophthalmic suspension":
           case "ophthalmic emulsion":
@@ -1698,7 +1689,6 @@
           case "ocular spray":
             imgUrl = "https://medex.com.bd/img/dosage-forms/eye-drop-3.png";
             break;
-
           case "cream":
           case "ointment":
           case "gel":
@@ -1709,128 +1699,8 @@
           case "rectal ointment":
           case "scalp ointment":
           case "nasal ointment":
-          case "ophthalmic ointment":
             imgUrl = "https://medex.com.bd/img/dosage-forms/ointment.png";
             break;
-
-          case "dry powder inhalation capsule (dpi)":
-          case "metered-dose inhaler (mdi)":
-          case "multidose dry powder inhaler (mdpi)":
-          case "nasal inhaler":
-          case "suspension for inhalation":
-            imgUrl =
-              "https://medex.com.bd/img/dosage-forms/dry-powder-inhalation.png";
-            break;
-
-          case "nebuliser solution":
-          case "nebuliser suspension":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/nebuliser.png";
-            break;
-
-          case "nasal spray":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/nasal-spray.png";
-            break;
-
-          case "effervescent powder":
-          case "oral powder":
-          case "powder for injection":
-          case "powder for solution":
-          case "powder for suspension":
-          case "topical powder":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/powder.png";
-            break;
-
-          case "extend release suspension":
-          case "intratracheal suspension":
-          case "oral suspension":
-          case "topical suspension":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/suspension.png";
-            break;
-
-          case "solution":
-          case "oral solution":
-          case "irrigation solution":
-          case "viscoelastic solution":
-          case "topical solution":
-          case "scalp solution":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/solution.png";
-            break;
-
-          case "lotion":
-          case "scalp lotion":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/lotion.png";
-            break;
-
-          case "shampoo":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/shampoo.png";
-            break;
-
-          case "mouthwash":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/mouthwash.png";
-            break;
-
-          case "suppository":
-          case "vaginal suppository":
-          case "vaginal pessary":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/suppository.png";
-            break;
-
-          case "transdermal patch":
-            imgUrl =
-              "https://medex.com.bd/img/dosage-forms/transdermal-patch.png";
-            break;
-
-          case "topical spray":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/spray.png";
-            break;
-
-          case "emulsion":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/emulsion.png";
-            break;
-
-          case "effervescent granules":
-          case "microgranules":
-          case "oral granules":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/granules.png";
-            break;
-
-          case "oral paste":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/oral-paste.png";
-            break;
-
-          case "hand rub":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/hand-rub.png";
-            break;
-
-          case "medicated bar":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/medicated-bar.png";
-            break;
-
-          case "nail lacquer":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/nail-lacquer.png";
-            break;
-
-          case "liquid":
-          case "liquid cleanser":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/liquid.png";
-            break;
-
-          case "serum":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/serum.png";
-            break;
-
-          case "semisolid preparation":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/ointment.png";
-            break;
-
-          case "surgical scrub":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/surgical-scrub.png";
-            break;
-
-          case "rectal saline":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/rectal-saline.png";
-            break;
-
           default:
             imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
             break;
@@ -1903,9 +1773,7 @@
           return matchesSearch && matchesCat;
         });
 
-        // 👉 নতুন যোগ করুন: নাম অনুযায়ী সর্ট করার জন্য (Alphabetical Order)
         filtered.sort((a, b) => a.name.localeCompare(b.name));
-
         document.getElementById("statTotal").innerText = dbMedicines.length;
 
         if (filtered.length === 0) {
@@ -1913,29 +1781,28 @@
           return;
         }
 
-        // লোগো আইকনের এসভিজি কোড বা ইমেজ ট্যাগ
         const logoSvgMini = `<svg class="btn-logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="16" cy="16" r="16" fill="url(#logoGradient)"/>
-  <path d="M14 8H18V14H24V18H18V24H14V18H8V14H14V8Z" fill="white"/>
-</svg>`;
+          <circle cx="16" cy="16" r="16" fill="url(#logoGradient)"/>
+          <path d="M14 8H18V14H24V18H18V24H14V18H8V14H14V8Z" fill="white"/>
+        </svg>`;
 
         filtered.forEach((m, index) => {
           const iconHTML = getCategoryIcon(m.category);
           const delay = (index * 0.03).toFixed(2);
 
           tbody.innerHTML += `
-    <tr class="animated-row" style="animation-delay: ${delay}s;">
-        <td>
-          <button class="btn-dynamic-add" onclick="addToCart('${m.name.replace(/'/g, "\\'")}', '${m.category || "Tablet"}', ${m.unitPrice})" title="Add to Cart">
-            ${logoSvgMini} Add
-          </button>
-        </td>
-        <td><div class="med-name">${iconHTML} <span>${m.name}</span></div></td>
-        <td><span class="badge">${m.category || "Tablet"}</span></td>
-        <td>${m.unitPrice.toFixed(2)} Tk</td>
-        <td>${m.stripPrice.toFixed(2)} Tk</td>
-    </tr>
-  `;
+            <tr class="animated-row" style="animation-delay: ${delay}s;">
+                <td>
+                  <button class="btn-dynamic-add" onclick="addToCart('${m.name.replace(/'/g, "\\'")}', '${m.category || "Tablet"}', ${m.unitPrice})" title="Add to Cart">
+                    ${logoSvgMini} Add
+                  </button>
+                </td>
+                <td><div class="med-name">${iconHTML} <span>${m.name}</span></div></td>
+                <td><span class="badge">${m.category || "Tablet"}</span></td>
+                <td>${m.unitPrice.toFixed(2)} Tk</td>
+                <td>${m.stripPrice.toFixed(2)} Tk</td>
+            </tr>
+          `;
         });
       }
 
@@ -2023,23 +1890,6 @@
             ? `${rawName} ${powerFormatted}`
             : rawName;
 
-          const isDuplicateDB = dbMedicines.some(
-            (m) =>
-              m.name.toLowerCase() === fullName.toLowerCase() &&
-              m.category.toLowerCase() === category.toLowerCase(),
-          );
-          const isDuplicateBatch = medicinesToSave.some(
-            (m) =>
-              m.name.toLowerCase() === fullName.toLowerCase() &&
-              m.category.toLowerCase() === category.toLowerCase(),
-          );
-
-          if (isDuplicateDB || isDuplicateBatch) {
-            hasError = true;
-            errorMessage = `⚠️ "${fullName} (${category})" already exists in Database!`;
-            return;
-          }
-
           medicinesToSave.push({
             name: fullName,
             category,
@@ -2092,7 +1942,7 @@
           );
         } else {
           showToast(
-            `⚠️ ${savedCount} out of ${medicinesToSave.length} medicine(s) saved. Some may have failed.`,
+            `⚠️ ${savedCount} out of ${medicinesToSave.length} medicine(s) saved.`,
           );
         }
 
@@ -2143,9 +1993,7 @@
                 <td id="qty_${index}">0</td>
                 <td id="amt_${index}">0.00 Tk</td>
                 <td class="no-print">
-                  <button class="btn-remove-circle" onclick="removeFromCart(${index})" title="Remove">
-                    -
-                  </button>
+                  <button class="btn-remove-circle" onclick="removeFromCart(${index})" title="Remove">-</button>
                 </td>
             </tr>
         `;
@@ -2223,7 +2071,6 @@
         document.getElementById("p_discount_show").innerText =
           discountVal + "%";
 
-        // Update cart doses from inputs
         cart.forEach((item, index) => {
           const doseInput = document.getElementById(`dose_${index}`);
           if (doseInput) {
@@ -2231,11 +2078,9 @@
           }
         });
 
-        // Force render cart data for print
         const cartTable = document.getElementById("cartTable");
         const rows = cartTable.querySelectorAll("tr");
 
-        // Remove old print dose spans
         document
           .querySelectorAll(".print-dose-show")
           .forEach((el) => el.remove());
@@ -2246,7 +2091,6 @@
           if (index < cart.length) {
             const cells = row.querySelectorAll("td");
             if (cells.length >= 7) {
-              // Dose Cell (index 3)
               const doseCell = cells[3];
               const input = doseCell.querySelector("input");
 
@@ -2261,12 +2105,10 @@
                 doseCell.appendChild(doseSpan);
               }
 
-              // Quantity Cell (index 5)
               const qtyCell = cells[5];
               const totalQty = cart[index].dose * days;
               qtyCell.innerText = totalQty.toFixed(0);
 
-              // Amount Cell (index 6)
               const amtCell = cells[6];
               const totalAmount = totalQty * cart[index].unitPrice;
               amtCell.innerText = totalAmount.toFixed(2) + " Tk";
@@ -2274,14 +2116,13 @@
           }
         });
 
-        // Hide inputs, show spans
-        const inputs = document.querySelectorAll(".top-grid input");
-        inputs.forEach((input) => (input.style.display = "none"));
+        document
+          .querySelectorAll(".top-grid input")
+          .forEach((input) => (input.style.display = "none"));
+        document
+          .querySelectorAll(".print-show")
+          .forEach((span) => (span.style.display = "inline-block"));
 
-        const spans = document.querySelectorAll(".print-show");
-        spans.forEach((span) => (span.style.display = "inline-block"));
-
-        // Admin footer
         const footerAdmin = document.getElementById("printFooterAdmin");
         if (loggedInAdmin) {
           document.getElementById("printAdminName").innerText =
@@ -2291,7 +2132,6 @@
           footerAdmin.classList.remove("show-admin");
         }
 
-        // Browser-কে DOM update করার সময় দিন
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             window.print();
@@ -2301,24 +2141,19 @@
 
       window.onafterprint = function () {
         setTimeout(() => {
-          // Restore inputs
           document.querySelectorAll(".top-grid input").forEach((input) => {
             input.style.display = "block";
           });
-
           document.querySelectorAll(".print-show").forEach((span) => {
             span.style.display = "none";
           });
-
           document.querySelectorAll(".print-dose-show").forEach((span) => {
             span.remove();
           });
-
           document.querySelectorAll("#cartTable input").forEach((input) => {
             input.style.display = "block";
           });
 
-          // এখন Cart Clear হবে
           cart = [];
           renderCart();
 
