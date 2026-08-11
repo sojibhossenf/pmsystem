@@ -689,6 +689,7 @@
         .no-print,
         button,
         .close-modal,
+        .close-modal-dynamic,
         .stats-grid,
         .site-footer,
         .ticker-wrap,
@@ -1134,7 +1135,7 @@
               <thead>
                 <tr>
                   <th>Action</th>
-                  <th style="text-align: left">Medicine Name</th>
+                  <th style="text-align: center">Medicine Name</th>
                   <th>Category</th>
                   <th>Unit Price</th>
                   <th>Strip Price</th>
@@ -1322,133 +1323,98 @@
 
     <script>
       const GOOGLE_SHEET_URL =
-        "https://script.google.com/macros/s/AKfycbwMQIUbG1cm3nPOOdiM2DrXiOwrxbrgD2vAmbXp5dlR68bWfI6Was-Wp8pRICIx2yEt/exec";
+        "https://script.google.com/macros/s/AKfycbxXeV7yARDrViEZgG9_QmuSmIyVeQwKcp6iv0zTxxXx3DndfB2MiRPMHNv1E1hvvhq6ZA/exec";
 
       const adminsList = [
         { username: "Sojib", password: "Fatema@015", name: "Md Sojib Hossen" },
         { username: "Fatema", password: "Sojib@015", name: "Fatema Khatun" },
-        { username: "Admin", password: "admin@015", name: "System Admin" },
+        { username: "Admin", password: "Admin@015", name: "System Admin" },
       ];
 
       let loggedInAdmin = null;
       let categoriesList = [
+        "Tablet",
         "Capsule",
-        "Capsule (Controlled Release)",
-        "Capsule (Delayed Release)",
-        "Capsule (Enteric Coated)",
-        "Capsule (Extended Release)",
-        "Capsule (Modified Release)",
-        "Capsule (Sustained Release)",
-        "Capsule (Timed Release)",
-        "Chewable Tablet",
-        "Cream",
-        "Dialysis Solution",
-        "Dispersible Tablet",
-        "Dry Powder Inhalation Capsule (DPI)",
-        "Ear Drop",
-        "Effervescent Granules",
-        "Effervescent Powder",
-        "Effervescent Tablet",
-        "Emulsion",
-        "Emulsion for infusion",
-        "Extend Release Suspension",
-        "Flash Tablet",
-        "Gel",
-        "Hand Rub",
-        "IM Injection",
-        "IM/IA Injection",
-        "IM/IV Injection",
-        "IM/SC Injection",
-        "Injectable Solution (Oral & IM)",
+        "Syrup",
+        "Suspension",
+        "Eye Drop",
         "Injection",
-        "Intra-articular Injection",
-        "Intracameral Injection",
-        "Intraocular Injection",
-        "Intraspinal Injection",
-        "Intratracheal Suspension",
-        "Intravitreal Injection",
-        "Irrigation Solution",
-        "IV Infusion",
+        "Cream",
+        "EC Capsule",
+        "Oral Solution",
+        "ER Tablet",
+        "EC Tablet",
+        "Ointment",
+        "Chewable Tablet",
+        "Pediatric Drop",
         "IV Injection",
-        "IV Injection or Infusion",
-        "IV/SC Injection",
-        "Liquid",
-        "Liquid Cleanser",
-        "Long Acting Tablet",
+        "Powder",
+        "Inhalation Capsule",
+        "DR Tablet",
+        "TR Capsule",
+        "SR Tablet",
+        "Metered-Dose Inhaler",
+        "Hand Rub",
+        "Gel",
+        "Nasal Spray",
+        "Powder for Solution",
+        "Eye Ointment",
+        "MR Tablet",
+        "SR Capsule",
         "Lotion",
-        "Medicated Bar",
-        "Metered-Dose Inhaler (MDI)",
-        "Microgranules",
+        "Suppository",
+        "Semisolid Preparation",
+        "Nasal Drop",
+        "Respirator Solution",
+        "Solution",
         "Mouthwash",
-        "Multidose Dry Powder Inhaler (MDPI)",
-        "MUPS Tablet",
+        "Topical Gel",
+        "Shampoo",
+        "MR Capsule",
+        "XR Capsule",
+        "Eff. Powder",
+        "Topical Solution",
+        "Ear Drop",
+        "Spray",
+        "Liquid",
+        "Eye Gel",
+        "Emulsion",
+        "Oral Gel",
+        "Scalp Solution",
+        "Medicated Bar",
+        "Flash Tablet",
+        "Injectable Solution",
+        "DR Capsule",
+        "Vaginal Cream",
+        "Dialysis Solution",
+        "Vaginal Tablet",
+        "Rectal Ointment",
+        "Vaginal Suppository",
+        "Serum",
+        "Eff. Granules",
+        "Oral Granules",
+        "Patch",
+        "Vaginal Gel",
+        "Emulsion for infusion",
+        "Dry Powder Inhaler",
+        "Oral Paste",
+        "PR Tablet",
+        "Scalp Lotion",
+        "Viscoelastic Solution",
+        "XR Suspension",
+        "Intraocular Injection",
+        "Cleanser Saop",
+        "Microgranules",
+        "Rectal Saline",
         "Muscle Rub",
         "Nail Lacquer",
-        "Nasal Drop",
-        "Nasal Inhaler",
-        "Nasal Ointment",
-        "Nasal Spray",
-        "Nebuliser Solution",
-        "Nebuliser Suspension",
-        "Ocular Spray",
-        "Ointment",
-        "Ophthalmic Emulsion",
-        "Ophthalmic Gel",
-        "Ophthalmic Ointment",
-        "Ophthalmic Solution",
-        "Ophthalmic Suspension",
-        "Oral Gel",
-        "Oral Granules",
-        "Oral Paste",
-        "Oral Powder",
         "Oral Soluble Film",
-        "Oral Solution",
-        "Oral Suspension",
-        "OROS Tablet",
-        "Pediatric Drops",
-        "Powder for Injection",
-        "Powder for Solution",
-        "Powder for Suspension",
-        "Rectal Ointment",
-        "Rectal Saline",
-        "Retard Tablet",
-        "SC Injection",
-        "Scalp Lotion",
-        "Scalp Ointment",
-        "Scalp Solution",
-        "Semisolid Preparation",
-        "Serum",
-        "Shampoo",
-        "Solution",
-        "Sprinkle Capsule",
-        "Sublingual Tablet",
-        "Suppository",
         "Surgical Scrub",
+        "Nasal Inhaler",
+        "OROS Tablet",
         "Suspension for Inhalation",
-        "Syrup",
-        "Tablet",
-        "Tablet (Bolus)",
-        "Tablet (Controlled Release)",
-        "Tablet (Delayed Release)",
-        "Tablet (Enteric Coated)",
-        "Tablet (Extended Release)",
-        "Tablet (Immediate Release)",
-        "Tablet (Modified Release)",
-        "Tablet (Prolonged Release)",
-        "Tablet (Sustained Release)",
-        "Topical Gel",
-        "Topical Powder",
-        "Topical Solution",
-        "Topical Spray",
-        "Topical Suspension",
-        "Transdermal Patch",
-        "Vaginal Cream",
-        "Vaginal Gel",
+        "IR Tablet",
         "Vaginal Pessary",
-        "Vaginal Suppository",
-        "Vaginal Tablet",
-        "Viscoelastic Solution",
-        "Viscous Eye Drop",
       ];
       let dbMedicines = [];
       let cart = [];
@@ -1620,88 +1586,494 @@
         let imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
 
         switch (category) {
-          case "capsule":
-          case "capsule (controlled release)":
-          case "capsule (delayed release)":
-          case "capsule (enteric coated)":
-          case "capsule (extended release)":
-          case "capsule (modified release)":
-          case "capsule (sustained release)":
-          case "capsule (timed release)":
-          case "sprinkle capsule":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/capsule.png";
-            break;
           case "tablet":
-          case "chewable tablet":
-          case "dispersible tablet":
-          case "effervescent tablet":
-          case "flash tablet":
-          case "long acting tablet":
-          case "mups tablet":
-          case "oros tablet":
-          case "retard tablet":
-          case "sublingual tablet":
-          case "tablet (bolus)":
-          case "tablet (controlled release)":
-          case "tablet (delayed release)":
-          case "tablet (enteric coated)":
-          case "tablet (extended release)":
-          case "tablet (immediate release)":
-          case "tablet (modified release)":
-          case "tablet (prolonged release)":
-          case "tablet (sustained release)":
-          case "vaginal tablet":
             imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
             break;
+
+          case "capsule":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/capsule.png";
+            break;
+
           case "syrup":
             imgUrl = "https://medex.com.bd/img/dosage-forms/syrup-2.png";
             break;
-          case "injection":
-          case "im injection":
-          case "im/ia injection":
-          case "im/iv injection":
-          case "im/sc injection":
-          case "injectable solution (oral & im)":
-          case "intra-articular injection":
-          case "intracameral injection":
-          case "intraocular injection":
-          case "intraspinal injection":
-          case "intravitreal injection":
-          case "iv injection":
-          case "iv injection or infusion":
-          case "iv/sc injection":
-          case "sc injection":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+
+          case "suspension":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/suspension.png";
             break;
-          case "iv infusion":
-          case "emulsion for infusion":
-          case "dialysis solution":
-            imgUrl = "https://medex.com.bd/img/dosage-forms/iv-infusion.png";
-            break;
-          case "ear drop":
-          case "nasal drop":
-          case "pediatric drops":
-          case "viscous eye drop":
-          case "ophthalmic solution":
-          case "ophthalmic suspension":
-          case "ophthalmic emulsion":
-          case "ophthalmic gel":
-          case "ophthalmic ointment":
-          case "ocular spray":
+
+          case "eye drop":
             imgUrl = "https://medex.com.bd/img/dosage-forms/eye-drop-3.png";
             break;
+
+          case "injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "iv infusion":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/iv-infusion.png";
+            break;
+
           case "cream":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/cream.png";
+            break;
+
           case "ointment":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/ointment.png";
+            break;
+
           case "gel":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/gel.png";
+            break;
+
+          case "powder":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/powder.png";
+            break;
+
+          case "solution":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/solution.png";
+            break;
+
+          case "lotion":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/lotion.png";
+            break;
+
+          case "spray":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/spray.png";
+            break;
+
+          case "nasal spray":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/nasal-spray.png";
+            break;
+
+          case "nasal drop":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/nasal-drop.png";
+            break;
+
+          case "ear drop":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/ear-drop.png";
+            break;
+
+          case "pediatric drops":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/pediatric-drop.png";
+            break;
+
+          case "suppository":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/suppository.png";
+            break;
+
+          case "mouthwash":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/mouthwash.png";
+            break;
+
+          case "shampoo":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/shampoo.png";
+            break;
+
+          case "liquid":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/liquid.png";
+            break;
+
+          case "emulsion":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/emulsion.png";
+            break;
+
+          case "patch":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/patch.png";
+            break;
+
+          case "transdermal patch":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/patch.png";
+            break;
+
+          case "serum":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/serum.png";
+            break;
+
+          case "ec capsule":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/capsule.png";
+            break;
+
+          case "oral solution":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/oral-solution.png";
+            break;
+
+          case "er tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "ec tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "chewable tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "dispersible tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "effervescent tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "flash tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "long acting tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "mups tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "oros tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "retard tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "sublingual tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "dr tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "tr capsule":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/capsule.png";
+            break;
+
+          case "sr tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "mr tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "sr capsule":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/capsule.png";
+            break;
+
+          case "mr capsule":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/capsule.png";
+            break;
+
+          case "xr capsule":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/capsule.png";
+            break;
+
+          case "dr capsule":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/capsule.png";
+            break;
+
+          case "inhalation capsule":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/inhalation-capsule.png";
+            break;
+
+          case "metered-dose inhaler":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/metered-dose-inhaler.png";
+            break;
+
+          case "dry powder inhaler":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/dry-powder-inhaler.png";
+            break;
+
+          case "hand rub":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/hand-rub.png";
+            break;
+
           case "topical gel":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/gel.png";
+            break;
+
           case "oral gel":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/gel.png";
+            break;
+
           case "vaginal cream":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/cream.png";
+            break;
+
           case "vaginal gel":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/gel.png";
+            break;
+
           case "rectal ointment":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/ointment.png";
+            break;
+
           case "scalp ointment":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/ointment.png";
+            break;
+
           case "nasal ointment":
             imgUrl = "https://medex.com.bd/img/dosage-forms/ointment.png";
             break;
+
+          case "eye ointment":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/eye-ointment.png";
+            break;
+
+          case "eye gel":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/eye-gel.png";
+            break;
+
+          case "eff. powder":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/powder.png";
+            break;
+
+          case "eff. granules":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/granules.png";
+            break;
+
+          case "oral granules":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/granules.png";
+            break;
+
+          case "microgranules":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/granules.png";
+            break;
+
+          case "powder for injection":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/powder-for-injection.png";
+            break;
+
+          case "powder for solution":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/powder-for-solution.png";
+            break;
+
+          case "powder for suspension":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/powder-for-suspension.png";
+            break;
+
+          case "oral powder":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/powder.png";
+            break;
+
+          case "topical powder":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/powder.png";
+            break;
+
+          case "oral paste":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/oral-paste.png";
+            break;
+
+          case "oral soluble film":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/oral-soluble-film.png";
+            break;
+
+          case "oral suspension":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/suspension.png";
+            break;
+
+          case "extend release suspension":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/suspension.png";
+            break;
+
+          case "intratracheal suspension":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/suspension.png";
+            break;
+
+          case "nebuliser suspension":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/suspension.png";
+            break;
+
+          case "topical suspension":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/suspension.png";
+            break;
+
+          case "suspension for inhalation":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/suspension.png";
+            break;
+
+          case "nebuliser solution":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/nebuliser-solution.png";
+            break;
+
+          case "respirator solution":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/nebuliser-solution.png";
+            break;
+
+          case "topical solution":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/solution.png";
+            break;
+
+          case "scalp solution":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/solution.png";
+            break;
+
+          case "irrigation solution":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/solution.png";
+            break;
+
+          case "dialysis solution":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/solution.png";
+            break;
+
+          case "liquid cleanser":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/liquid-cleanser.png";
+            break;
+
+          case "medicated bar":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/medicated-bar.png";
+            break;
+
+          case "muscle rub":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/muscle-rub.png";
+            break;
+
+          case "nail lacquer":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/nail-lacquer.png";
+            break;
+
+          case "nasal inhaler":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/nasal-inhaler.png";
+            break;
+
+          case "ocular spray":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/ocular-spray.png";
+            break;
+
+          case "topical spray":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/spray.png";
+            break;
+
+          case "vaginal tablet":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
+            break;
+
+          case "vaginal suppository":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/suppository.png";
+            break;
+
+          case "vaginal pessary":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/pessary.png";
+            break;
+
+          case "semisolid preparation":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/semisolid-preparation.png";
+            break;
+
+          case "surgical scrub":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/surgical-scrub.png";
+            break;
+
+          case "cleanser saop":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/soap.png";
+            break;
+
+          case "viscoelastic solution":
+            imgUrl =
+              "https://medex.com.bd/img/dosage-forms/viscoelastic-solution.png";
+            break;
+
+          case "injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "im injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "im/ia injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "im/iv injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "im/sc injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "iv injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "iv/sc injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "sc injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "intra-articular injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "intracameral injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "intraocular injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "intraspinal injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "intravitreal injection":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "injectable solution":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/injection.png";
+            break;
+
+          case "iv infusion":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/iv-infusion.png";
+            break;
+
+          case "emulsion for infusion":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/iv-infusion.png";
+            break;
+
+          case "ophthalmic solution":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/eye-drop-3.png";
+            break;
+
+          case "ophthalmic suspension":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/eye-drop-3.png";
+            break;
+
+          case "ophthalmic emulsion":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/eye-drop-3.png";
+            break;
+
+          case "ophthalmic gel":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/eye-drop-3.png";
+            break;
+
+          case "ophthalmic ointment":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/eye-drop-3.png";
+            break;
+
+          case "viscous eye drop":
+            imgUrl = "https://medex.com.bd/img/dosage-forms/eye-drop-3.png";
+            break;
+
           default:
             imgUrl = "https://medex.com.bd/img/dosage-forms/tablet.png";
             break;
@@ -1783,27 +2155,36 @@
         }
 
         const logoSvgMini = `<svg class="btn-logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="16" fill="url(#logoGradient)"/>
-          <path d="M14 8H18V14H24V18H18V24H14V18H8V14H14V8Z" fill="white"/>
-        </svg>`;
+    <circle cx="16" cy="16" r="16" fill="#0d6efd"/>
+    <path d="M14 8H18V14H24V18H18V24H14V18H8V14H14V8Z" fill="white"/>
+  </svg>`;
 
         filtered.forEach((m, index) => {
           const iconHTML = getCategoryIcon(m.category);
           const delay = (index * 0.03).toFixed(2);
+          const dosageDisplay = m.dosage ? m.dosage : "";
 
           tbody.innerHTML += `
-            <tr class="animated-row" style="animation-delay: ${delay}s;">
-                <td>
-                  <button class="btn-dynamic-add" onclick="addToCart('${m.name.replace(/'/g, "\\'")}', '${m.category || "Tablet"}', ${m.unitPrice})" title="Add to Cart">
-                    ${logoSvgMini} Add
-                  </button>
-                </td>
-                <td><div class="med-name">${iconHTML} <span>${m.name}</span></div></td>
-                <td><span class="badge">${m.category || "Tablet"}</span></td>
-                <td>${m.unitPrice.toFixed(2)} Tk</td>
-                <td>${m.stripPrice.toFixed(2)} Tk</td>
-            </tr>
-          `;
+    <tr class="animated-row" style="animation-delay: ${delay}s;">
+        <td>
+          <button class="btn-dynamic-add" onclick="addToCart('${m.name.replace(/'/g, "\\'")}', '${m.category || "Tablet"}', ${m.unitPrice}, '${m.dosage ? m.dosage.replace(/'/g, "\\'") : ""}')" title="Add to Cart">
+            ${logoSvgMini} Add
+          </button>
+        </td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 8px; text-align: left;">
+            <div style="flex-shrink: 0;">${iconHTML}</div>
+            <div style="display: flex; flex-direction: column; width: 100%;">
+              <span style="font-weight: bold; font-size: 15px; color: var(--text-color);">${m.name}</span>
+              <span style="font-size: 12px; color: var(--primary-color);">${dosageDisplay}</span>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge">${m.category || "Tablet"}</span></td>
+        <td>${m.unitPrice.toFixed(2)} Tk</td>
+        <td>${m.stripPrice.toFixed(2)} Tk</td>
+    </tr>
+  `;
         });
       }
 
@@ -1816,7 +2197,7 @@
 
         rowDiv.innerHTML = `
           <input type="text" class="new_name" placeholder="Medicine Name">
-          <input type="text" class="new_power" placeholder="Dosage" oninput="this.value = this.value.replace(/[^0-9.+-]/g, '')">
+          <input type="text" class="new_dosage" placeholder="Dosage">
           <select class="new_category" onchange="handleCategoryChange(this)">
               ${getCategoryOptionsHTML()}
           </select>
@@ -1838,18 +2219,6 @@
         }
       }
 
-      function formatPowerString(input) {
-        if (!input) return "";
-        return input
-          .split("+")
-          .map((part) => part.trim())
-          .filter((part) => part.length > 0)
-          .map((part) =>
-            part.toLowerCase().endsWith("mg") ? part : `${part}mg`,
-          )
-          .join("+");
-      }
-
       async function saveAllMedicines() {
         if (!loggedInAdmin) {
           showToast("⚠️ Unauthorized access! Please login as Admin.");
@@ -1863,7 +2232,7 @@
 
         rows.forEach((row) => {
           const rawName = row.querySelector(".new_name").value.trim();
-          const rawPower = row.querySelector(".new_power").value.trim();
+          const dosageVal = row.querySelector(".new_dosage").value.trim();
           const category = row.querySelector(".new_category").value;
           const unitPrice =
             parseFloat(row.querySelector(".new_unit").value) || 0;
@@ -1886,14 +2255,10 @@
             return;
           }
 
-          const powerFormatted = formatPowerString(rawPower);
-          const fullName = powerFormatted
-            ? `${rawName} ${powerFormatted}`
-            : rawName;
-
           medicinesToSave.push({
-            name: fullName,
-            category,
+            name: rawName,
+            dosage: dosageVal || "",
+            category: category,
             unitPrice: unitPrice,
             stripPrice: stripPrice > 0 ? stripPrice : 0,
             addedBy: loggedInAdmin.name,
@@ -1952,12 +2317,12 @@
         addNewRow();
       }
 
-      function addToCart(name, category, unitPrice) {
+      function addToCart(name, category, unitPrice, dosage) {
         const existing = cart.find(
           (item) => item.name === name && item.category === category,
         );
         if (!existing) {
-          cart.push({ name, category, unitPrice, dose: 1 });
+          cart.push({ name, category, unitPrice, dose: 1, dosageText: dosage });
           renderCart();
           showToast("✅ Added to Cart!");
         } else {
@@ -1982,22 +2347,32 @@
 
         cart.forEach((item, index) => {
           const iconHTML = getCategoryIcon(item.category);
+          const dosageDisplay = item.dosageText ? item.dosageText : "";
+
           tbody.innerHTML += `
-            <tr>
-                <td>${index + 1}</td>
-                <td><div class="med-name">${iconHTML} <span>${item.name}</span></div></td>
-                <td><span class="badge">${item.category}</span></td>
-                <td>
-                    <input type="number" min="0" step="any" value="${item.dose}" id="dose_${index}" style="width:60px; min-height:32px; text-align:center; padding:4px;" oninput="updateDose(${index}, this.value)">
-                </td>
-                <td>${item.unitPrice.toFixed(2)} Tk</td>
-                <td id="qty_${index}">0</td>
-                <td id="amt_${index}">0.00 Tk</td>
-                <td class="no-print">
-                  <button class="btn-remove-circle" onclick="removeFromCart(${index})" title="Remove">-</button>
-                </td>
-            </tr>
-        `;
+      <tr>
+          <td>${index + 1}</td>
+          <td>
+            <div style="display: flex; align-items: center; gap: 8px; text-align: left;">
+              <div style="flex-shrink: 0;">${iconHTML}</div>
+              <div style="display: flex; flex-direction: column; width: 100%;">
+                <span style="font-weight: bold; font-size: 15px; color: var(--text-color);">${item.name}</span>
+                <span style="font-size: 12px; color: var(--primary-color);">${dosageDisplay}</span>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge">${item.category}</span></td>
+          <td>
+              <input type="number" min="0" step="any" value="${item.dose}" id="dose_${index}" style="width:60px; min-height:32px; text-align:center; padding:4px;" oninput="updateDose(${index}, this.value)">
+          </td>
+          <td>${item.unitPrice.toFixed(2)} Tk</td>
+          <td id="qty_${index}">0</td>
+          <td id="amt_${index}">0.00 Tk</td>
+          <td class="no-print">
+            <button class="btn-remove-circle" onclick="removeFromCart(${index})" title="Remove">-</button>
+          </td>
+      </tr>
+    `;
         });
         calculateCart();
       }
