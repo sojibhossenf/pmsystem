@@ -1423,22 +1423,7 @@
 
     <script>
       const GOOGLE_SHEET_URL =
-        "https://script.google.com/macros/s/AKfycby17jhcUimcl97DRgHkthZR41WC3kMXvqerIccWpqikBMw4tdkN1M7tCQ7-AGqvbIl-vA/exec";
-
-      const adminsList = [
-        {
-          username: "Fatema",
-          password: "Sojib@015",
-          name: "Fatema Khatun",
-          role: "super_admin",
-        },
-        {
-          username: "Sojib",
-          password: "Fatema@015",
-          name: "Md Sojib Hossen",
-          role: "admin",
-        },
-      ];
+        "https://script.google.com/macros/s/AKfycbwulBdNnylPZ8W8IIoHbwVUSbsPVFkn-7w3amK_umX2Mz_eBKgAOjffRsoKqu5c4q-aFg/exec";
 
       let loggedInAdmin = null;
       let categoriesList = [
@@ -1618,25 +1603,50 @@
         document.getElementById("loginModal").style.display = "none";
       }
 
-      function submitAdminLogin() {
+      async function submitAdminLogin() {
         const uInput = document.getElementById("loginUsername").value.trim();
         const pInput = document.getElementById("loginPassword").value.trim();
-        const foundAdmin = adminsList.find(
-          (a) => a.username === uInput && a.password === pInput,
-        );
 
-        if (foundAdmin) {
-          loggedInAdmin = foundAdmin;
-          localStorage.setItem("logged_admin", JSON.stringify(foundAdmin));
-          closeLoginModal();
-          updateAdminUI();
-          renderDatabase();
-          document.getElementById("multiMedContainer").innerHTML = "";
-          rowCounter = 0;
-          addNewRow();
-          showToast(`Welcome, ${loggedInAdmin.name}!`);
-        } else {
-          showToast("❌ Invalid Username or Password!");
+        if (!uInput || !pInput) {
+          showToast("⚠️ Please enter username and password!");
+          return;
+        }
+
+        showToast("⏳ Checking login...");
+
+        try {
+          // গুগল শিট বা ব্যাকএন্ডে ইউজারনেম ও পাসওয়ার্ড যাচাইয়ের জন্য পাঠানো হচ্ছে
+          const response = await fetch(GOOGLE_SHEET_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" }, // Apps Script CORS বাইপাস করার জন্য
+            body: JSON.stringify({
+              action: "LOGIN",
+              username: uInput,
+              password: pInput,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (result.status === "success") {
+            loggedInAdmin = {
+              name: result.name,
+              role: result.role,
+            };
+            localStorage.setItem("logged_admin", JSON.stringify(loggedInAdmin));
+            closeLoginModal();
+            updateAdminUI();
+            renderDatabase();
+            document.getElementById("multiMedContainer").innerHTML = "";
+            rowCounter = 0;
+            addNewRow();
+            showToast(`Welcome, ${loggedInAdmin.name}!`);
+          } else {
+            showToast("❌ Invalid Username or Password!");
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+          showToast("⚠️ Login failed. Check connection.");
         }
       }
 
