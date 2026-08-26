@@ -3233,7 +3233,7 @@
       let editingMedicineId = null;
 
       // Medicine list pagination: exactly 50 medicines per page.
-      const MEDICINES_PER_PAGE = 50;
+      const MEDICINES_PER_PAGE = 36;
       let currentMedicinePage = 1;
 
       document.getElementById("date").value = new Date().toLocaleDateString(
@@ -3946,9 +3946,38 @@
           return matchesSearch && matchesCat;
         });
 
-        filtered.sort((a, b) =>
-          String(a.name || "").localeCompare(String(b.name || "")),
-        );
+        function getDosageNumber(dosage) {
+          const match = String(dosage || "")
+            .replace(/,/g, "")
+            .match(/(\d+(?:\.\d+)?)/);
+
+          return match ? parseFloat(match[1]) : Number.POSITIVE_INFINITY;
+        }
+
+        filtered.sort((a, b) => {
+          const nameCompare = String(a.name || "").localeCompare(
+            String(b.name || ""),
+            undefined,
+            { sensitivity: "base" },
+          );
+
+          if (nameCompare !== 0) {
+            return nameCompare;
+          }
+
+          const dosageA = getDosageNumber(a.dosage);
+          const dosageB = getDosageNumber(b.dosage);
+
+          if (dosageA !== dosageB) {
+            return dosageA - dosageB;
+          }
+
+          return String(a.dosage || "").localeCompare(
+            String(b.dosage || ""),
+            undefined,
+            { sensitivity: "base" },
+          );
+        });
 
         return filtered;
       }
