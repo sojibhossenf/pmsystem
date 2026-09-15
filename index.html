@@ -228,6 +228,59 @@
         transform: scale(1.1);
       }
 
+      /* ---- Slip Quantity Edit Controls ---- */
+      .slip-action-controls {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        white-space: nowrap;
+      }
+
+      .slip-qty-edit-check {
+        width: 16px !important;
+        height: 16px !important;
+        min-height: 16px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        accent-color: #1473e6;
+        border: 2px solid #1473e6 !important;
+        border-radius: 4px;
+        appearance: auto;
+        outline: 1px solid rgba(20, 115, 230, 0.18);
+        outline-offset: 1px;
+        cursor: pointer;
+      }
+
+      .slip-qty-edit-check:checked {
+        accent-color: #1473e6;
+        outline-color: rgba(20, 115, 230, 0.45);
+      }
+
+      .slip-qty-input {
+        width: 68px !important;
+        min-height: 30px !important;
+        padding: 3px 5px !important;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .slip-qty-input:disabled {
+        opacity: 1;
+        cursor: not-allowed;
+        background: transparent !important;
+        border-color: transparent !important;
+        color: var(--text-color);
+      }
+
+      @media print {
+        .slip-action-controls,
+        .slip-qty-edit-check,
+        .slip-qty-input {
+          display: none !important;
+        }
+      }
+
       /* ---- Close Modal Button (Dynamic) ---- */
       .close-modal-dynamic {
         position: absolute;
@@ -1322,8 +1375,22 @@
           print-color-adjust: exact !important;
         }
 
-        .modal-content .summary strong {
+        .modal-content .summary > div:first-child {
+          color: #000000 !important;
+        }
+
+        .modal-content .summary > div:nth-child(2) {
           color: #198754 !important;
+        }
+
+        .modal-content .summary strong {
+          color: #dc3545 !important;
+        }
+
+        .modal-content .summary > div:first-child span,
+        .modal-content .summary > div:nth-child(2) span,
+        .modal-content .summary > strong span {
+          color: inherit !important;
         }
 
         .modal-content .print-footer-admin.show-admin {
@@ -4817,6 +4884,7 @@
             category: fullCategory,
             unitPrice: Number(unitPrice) || 0,
             dose: 1,
+            quantityOverride: null,
             dosageText: dosage || "",
           });
 
@@ -4887,10 +4955,19 @@
               <td id="amt_${index}">0.00 Tk</td>
 
               <td class="no-print">
-                <button
-                  class="btn-remove-circle"
-                  onclick="removeFromCart(${index})"
-                  title="Remove">-</button>
+                <div class="slip-action-controls">
+                  <button
+                    class="btn-remove-circle"
+                    onclick="removeFromCart(${index})"
+                    title="Remove">-</button>
+                  <input
+                    type="checkbox"
+                    class="slip-qty-edit-check"
+                    id="qtyEdit_${index}"
+                    aria-label="Edit quantity for ${escapeHtml(item.name)}"
+                    onchange="toggleQuantityEdit(${index}, this.checked)"
+                  />
+                </div>
               </td>
             </tr>
           `;
@@ -4918,13 +4995,29 @@
         let subtotal = 0;
 
         cart.forEach((item, index) => {
-          const totalQty = item.dose * days;
+          const automaticQty = item.dose * days;
+          const totalQty =
+            item.quantityOverride !== null &&
+            item.quantityOverride !== undefined
+              ? Math.max(0, Number(item.quantityOverride) || 0)
+              : automaticQty;
           const totalAmount = totalQty * item.unitPrice;
           subtotal += totalAmount;
 
           const qtyEl = document.getElementById(`qty_${index}`);
           const amtEl = document.getElementById(`amt_${index}`);
-          if (qtyEl) qtyEl.innerText = totalQty.toFixed(0);
+          const qtyInput = document.getElementById(`qtyEditInput_${index}`);
+
+          if (qtyEl && !qtyInput) {
+            qtyEl.innerText = Number.isFinite(totalQty)
+              ? totalQty.toFixed(0)
+              : "0";
+          }
+
+          if (qtyInput && document.activeElement !== qtyInput) {
+            qtyInput.value = Number.isFinite(totalQty) ? totalQty : 0;
+          }
+
           if (amtEl) amtEl.innerText = totalAmount.toFixed(2) + " Tk";
         });
 
@@ -4940,6 +5033,56 @@
         document.getElementById("statCart").innerText = cart.length;
         document.getElementById("statBill").innerText =
           grandTotal.toFixed(2) + " Tk";
+      }
+
+      /**
+       * Enables quantity editing only for the selected slip item.
+       * The checkbox is located beside the Remove button in the Action column.
+       */
+      function toggleQuantityEdit(index, enabled) {
+        const item = cart[index];
+        if (!item) return;
+
+        const qtyCell = document.getElementById(`qty_${index}`);
+        const checkbox = document.getElementById(`qtyEdit_${index}`);
+        if (!qtyCell || !checkbox) return;
+
+        const days = parseFloat(document.getElementById("days").value) || 0;
+        const currentQty =
+          item.quantityOverride !== null && item.quantityOverride !== undefined
+            ? Number(item.quantityOverride) || 0
+            : item.dose * days;
+
+        if (enabled) {
+          qtyCell.innerHTML = `
+            <input
+              type="number"
+              min="0"
+              step="any"
+              class="slip-qty-input"
+              id="qtyEditInput_${index}"
+              value="${currentQty}"
+              aria-label="Editable quantity"
+              oninput="updateManualQuantity(${index}, this.value)"
+            />
+          `;
+        } else {
+          item.quantityOverride = null;
+          qtyCell.innerText = currentQty.toFixed(0);
+        }
+
+        calculateCart();
+      }
+
+      /**
+       * Saves a manually edited quantity and recalculates the bill.
+       */
+      function updateManualQuantity(index, value) {
+        if (!cart[index]) return;
+        const quantity = parseFloat(value);
+        cart[index].quantityOverride =
+          Number.isFinite(quantity) && quantity >= 0 ? quantity : 0;
+        calculateCart();
       }
 
       /**
@@ -5033,7 +5176,12 @@
               }
 
               const qtyCell = cells[5];
-              const totalQty = cart[index].dose * days;
+              const automaticQty = cart[index].dose * days;
+              const totalQty =
+                cart[index].quantityOverride !== null &&
+                cart[index].quantityOverride !== undefined
+                  ? Math.max(0, Number(cart[index].quantityOverride) || 0)
+                  : automaticQty;
               qtyCell.innerText = totalQty.toFixed(0);
 
               const amtCell = cells[6];
@@ -5046,6 +5194,9 @@
         document
           .querySelectorAll(".top-grid input")
           .forEach((input) => (input.style.display = "none"));
+        document
+          .querySelectorAll(".slip-qty-input, .slip-qty-edit-check")
+          .forEach((control) => (control.style.display = "none"));
         document
           .querySelectorAll(".print-show")
           .forEach((span) => (span.style.display = "inline-block"));
